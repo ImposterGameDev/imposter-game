@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Imposter Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+
+      <section id="start-screen" class="screen active">
+        <h1>Imposter Game</h1>
+        <p class="subtitle">Pass the phone. One player is the imposter.</p>
+
+        <label for="player-count">Number of Players</label>
+        <input
+          type="number"
+          id="player-count"
+          min="3"
+          max="12"
+          value="4"
+        />
+
+        <button id="start-button">Start Game</button>
+      </section>
+
+      <section id="reveal-screen" class="screen">
+        <h2 id="player-turn-text">Player 1's Turn</h2>
+        <p id="category-text" class="instruction"></p>
+        <p class="instruction">Make sure only this player is looking.</p>
+
+        <div id="word-box" class="word-box hidden-word">
+          Tap reveal to see your word
+        </div>
+
+        <div class="button-group">
+          <button id="reveal-button">Reveal Word</button>
+          <button id="hide-button" class="secondary">Hide Word</button>
+          <button id="next-button">Next Player</button>
+        </div>
+      </section>
+
+      <section id="discussion-screen" class="screen">
+        <h2>Discussion Time</h2>
+        <p id="discussion-category-text"></p>
+        <p>Everyone has seen their word.</p>
+        <p>Talk, bluff, and figure out who the imposter is.</p>
+
+        <button id="show-result-button">Reveal Imposter</button>
+      </section>
+
+      <section id="result-screen" class="screen">
+        <h2>Round Result</h2>
+
+        <p id="result-text" class="result-text"></p>
+
+        <div class="result-details">
+          <p><strong>Category:</strong> <span id="result-category-text"></span></p>
+          <p><strong>Real Word:</strong> <span id="real-word-text"></span></p>
+          <p><strong>Imposter Saw:</strong> <span id="imposter-word-text"></span></p>
+        </div>
+
+        <button id="play-again-button">Play Again</button>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
