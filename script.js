@@ -5,6 +5,7 @@ const resultScreen = document.getElementById("result-screen");
 
 const playerCountInput = document.getElementById("player-count");
 const startButton = document.getElementById("start-button");
+const categoryOptions = document.getElementById("category-options");
 
 const playerTurnText = document.getElementById("player-turn-text");
 const categoryText = document.getElementById("category-text");
@@ -42,9 +43,48 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getRandomQuestionSet() {
-  const randomIndex = Math.floor(Math.random() * questionSets.length);
-  return questionSets[randomIndex];
+function getUniqueCategories() {
+  const categories = questionSets.map(function (question) {
+    return question.category;
+  });
+
+  return [...new Set(categories)].sort();
+}
+
+function renderCategoryOptions() {
+  const categories = getUniqueCategories();
+
+  categoryOptions.innerHTML = categories
+    .map(function (category) {
+      const safeId = category.toLowerCase().replace(/\s+/g, "-");
+      return `
+        <label>
+          <input type="checkbox" class="category-checkbox" value="${category}" checked />
+          ${category}
+        </label>
+      `;
+    })
+    .join("");
+}
+
+function getSelectedCategories() {
+  const checkedBoxes = document.querySelectorAll(".category-checkbox:checked");
+  return Array.from(checkedBoxes).map(function (checkbox) {
+    return checkbox.value;
+  });
+}
+
+function getRandomQuestionSet(selectedCategories) {
+  const filteredQuestionSets = questionSets.filter(function (question) {
+    return selectedCategories.includes(question.category);
+  });
+
+  if (filteredQuestionSets.length === 0) {
+    return null;
+  }
+
+  const randomIndex = Math.floor(Math.random() * filteredQuestionSets.length);
+  return filteredQuestionSets[randomIndex];
 }
 
 function resetWordBox() {
@@ -89,9 +129,21 @@ function startGame() {
     return;
   }
 
+  const selectedCategories = getSelectedCategories();
+
+  if (selectedCategories.length === 0) {
+    alert("Please select at least one category.");
+    return;
+  }
+
   currentPlayer = 1;
   imposterPlayer = getRandomNumber(1, totalPlayers);
-  selectedQuestionSet = getRandomQuestionSet();
+  selectedQuestionSet = getRandomQuestionSet(selectedCategories);
+
+  if (!selectedQuestionSet) {
+    alert("No questions found for the selected categories.");
+    return;
+  }
 
   updatePlayerTurnText();
   updateCategoryText();
@@ -148,6 +200,8 @@ function playAgain() {
   playerCountInput.value = totalPlayers;
   showScreen(startScreen);
 }
+
+renderCategoryOptions();
 
 startButton.addEventListener("click", startGame);
 revealButton.addEventListener("click", revealWord);
